@@ -183,15 +183,10 @@ To be aligned with:
 ### **14. Technical Details**  
 **Tools Used**:  
 - **Python (Pandas)**: Time calculations, null detection  
-- **SQL**: Data joins and aggregations  
-- **Tableau**: Interactive dashboards  
+
 
 ### **15. Assumptions and Caveats**
-
 - **Date Integrity**: Claims before *2022-06-05* were excluded as out-of-scope per business rules.
-
 - **ICD Validity**: Diagnosis codes (`icd_code`) were assumed valid if non-null, although 25,000+ records had missing values.
-
 - **Compliance Logic**: The `is_compliant` field was presumed accurate, despite observable inconsistencies with claim status and payment outcomes.
-
 - **Profit Estimate**: A flat 20% profit margin was applied to all claims; actual margins may vary depending on provider contracts and negotiated rates.

@@ -102,6 +102,8 @@ To be aligned with:
 ### **8. Data Structure & Initial Checks**  
 **Primary Table**: `claims` (50,000 rows, 18 columns)  
 
+**KeyColumns:
+
 | **Column**          | **Description**                     | **Critical Issue**               |  
 |---------------------|-------------------------------------|----------------------------------|  
 | `service_date`      | Date of healthcare service          | Min: 2022-06-05, Max: 2025-05-31|  

@@ -120,8 +120,8 @@ To be aligned with:
 |-----------|-------------------|----------------------------------------|---------------|--------------|-----------------------------------|  
 | claims    | `denial_reason`   | Null in 79.92% of underpaid claims     | High          | Yes          | Mandate field entry at submission |  
 | claims    | `icd_code`        | 50.12% nulls (invalid for medical)     | High          | Yes          | ADA code parity for dental claims |  
-| logic     | `is_compliant`    | Approved claims marked non-compliant   | Critical      | Yes          | Reconcile with adjudication rules |  
-| logic     | `claim_status`    | "Denied" claims with paid amounts      | Critical      | Yes          | Block payments if status=Denied   |  
+| claims    | `is_compliant`    | Approved claims marked non-compliant   | Critical      | Yes          | Reconcile with adjudication rules |  
+| claims    | `claim_status`    | "Denied" claims with paid amounts      | Critical      | Yes          | Block payments if status=Denied   |  
 
 ---
 

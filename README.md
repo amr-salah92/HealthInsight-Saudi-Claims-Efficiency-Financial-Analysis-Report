@@ -95,7 +95,6 @@ To be aligned with:
 
 **Tools**:  
 - **Python Pandas**: For `submission_lag = submission_date - service_date`  
-- **SQL**: Join claims with provider/code reference tables  
 - **Statistical Thresholds**: "Late" = >45 days (per internal SLA)  
 
 ---

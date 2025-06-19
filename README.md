@@ -58,8 +58,7 @@ Claims data reveals systemic inefficiencies:
 | **Source**               | **Scope**                                  | **Timeframe**       |  
 |--------------------------|--------------------------------------------|---------------------|  
 | Claims Database (SQL)    | 50,000 claims (medical/dental)             | 2022-06-05 to 2025-07-04 |  
-| Provider Master API      | 1,000+ provider IDs                        | Real-time sync      |  
-| ICD-10/CPT/ADA Codebooks | Diagnostic/procedure code validation       | Static reference    |  
+
 
 ---
 

@@ -1,4 +1,4 @@
-### Comprehensive Claims Analysis Report for Saudi Health Insurer  
+### Comprehensive Claims Analysis Report for Saudi Health Insurer 
 
 ---
 
@@ -29,28 +29,26 @@
 
 ### **2. Project Background**  
 **Company Profile**:  
-- **Industry**: Health insurance provider serving 5 major Saudi cities (Riyadh, Jeddah, Makkah, Medina, Dammam).  
-- **Active Years**: Operating since 2010, processing ~16,700 claims monthly.  
-- **Business Model**: B2B2C partnerships with 1,000+ healthcare providers.  
+- **Industry**: Health insurance provider serving 5 major Saudi cities  
+- **Active Years**: Operating since 2010, processing ~16,700 claims monthly  
 - **Key Metrics**:  
-  - **SAR 251.6M** total claimed amount (2022–2025)  
+  - **SAR 251.6M** total claimed amount  
   - **89.02%** average approval rate  
   - **SAR 44.8M** estimated profit (20% margin)  
 
-**Analyst Context**:  
-Claims data reveals systemic inefficiencies:  
-- 93.25% of claims submitted >45 days after service (avg. 366 days lag)  
-- **SAR 5.67M** paid for non-compliant denied claims (critical audit risk)  
-- 10,038 underpaid claims (20.1% of total)  
+**Critical Findings**:  
+- **SAR 103.07M** underpayment reductions from 10,038 claims  
+- **SAR 5.67M** paid for non-compliant denied claims  
+- 93.25% claims submitted >45 days after service  
 
 ---
 
 ### **3. Project Goals**  
 **Strategic Imperatives**:  
-1. **Reduce Financial Leakage**: Address **SAR 5.67M** in improper payments for denied/non-compliant claims.  
-2. **Accelerate Processing**: Eliminate 1-year submission lags causing cash flow issues.  
-3. **Improve Compliance**: Resolve 2,583 unjustified denials of compliant claims.  
-4. **Optimize Adjudication**: Fix dental claim underpayments (100% due to invalid code logic).  
+1. **Recover SAR 5.67M** in improper payments for denied claims  
+2. **Accelerate processing** by eliminating 1-year submission lags  
+3. **Prevent SAR 103M+** in underpayment disputes  
+4. **Resolve compliance gaps** in 19,898 approved non-compliant claims  
 
 ---
 
@@ -59,134 +57,148 @@ Claims data reveals systemic inefficiencies:
 |--------------------------|--------------------------------------------|---------------------|  
 | Claims Database (SQL)    | 50,000 claims (medical/dental)             | 2022-06-05 to 2025-07-04 |  
 
-
 ---
 
 ### **5. Formal Data Governance**  
-**Existing Framework**:  
-- **ISO 27001** for data security  
-- **HIPAA-equivalent** (Saudi NCA E-Health Standards) for PHI encryption  
-- **Automated Checks**: Null validation for `claim_id`, `member_id`, `service_date`  
-
-**Improvement Recommendations**:  
-1. **Standardize Code Validation**:  
-   - Accept ADA codes for dental claims (fixes 5,033 underpayments).  
-2. **Implement Data Quality SLA**:  
-   - Reject claims with missing `icd_code`/`cpt_code` (25,060 nulls).  
-3. **Audit Trail Enhancement**:  
-   - Log all `adjudicator_id` overrides of compliance flags.  
+**Critical Improvements**:  
+1. **Payment Validation Rules**:  
+   - Block payments if `claim_status = "Denied"`  
+   - Require executive override for `is_compliant = False` approvals  
+2. **Underpayment Logic**:  
+   - Implement reason-specific reduction rules  
+3. **ICD Code Enforcement**:  
+   - Reject claims with null `icd_code`/`cpt_code` (25,060 records)  
 
 ---
 
 ### **6. Regulatory Reporting**  
-To be aligned with:
-- **Saudi Council of Health Insurance (SCHI)** guidelines  
-- Reporting on **timeliness**, **denial reasons**, and **compliance rates**  
-- Preparation for external audits by **CCHI**, **NCA**, and **MoH**  
+**Alignment Requirements**:  
+- **SCHI** guidelines for claim timeliness  
+- **NCA** compliance standards  
+- **MoH** auditing frameworks  
 
 ---
 
 ### **7. Methodology**  
-**Analytical Approach**:  
-1. **Time Series Analysis**: Claim lifecycle metrics (`submission_lag`, `processing_time`).  
-2. **Root Cause Analysis**: Underpaid claims using `denial_reason` segmentation.  
-3. **Geospatial Mapping**: Claim status by city/diagnosis (ICD code hotspots).  
-4. **Compliance Reconciliation**: Cross-filter `claim_status`, `is_compliant`, and `approved_amount`.  
-
-**Tools**:  
-- **Python Pandas**: For `submission_lag = submission_date - service_date`  
-- **Statistical Thresholds**: "Late" = >45 days (per internal SLA)  
+**Enhanced Analytical Approach**:  
+1. **Compliance Reconciliation**: Cross-filtered `claim_status`, `is_compliant`, and `approved_amount`  
+2. **Root Cause Analysis**: Segmented underpayments by denial reason  
+3. **Geospatial Hotspots**: Mapped city/ICD denial patterns  
+4. **Lifecycle Trend Analysis**: Submission lag vs. processing time  
 
 ---
 
 ### **8. Data Structure & Initial Checks**  
-**Primary Table**: `claims` (50,000 rows, 18 columns)  
-
-**KeyColumns:
-
-| **Column**          | **Description**                     | **Critical Issue**               |  
-|---------------------|-------------------------------------|----------------------------------|  
-| `service_date`      | Date of healthcare service          | Min: 2022-06-05, Max: 2025-05-31|  
-| `submission_date`   | Date claim filed by provider        | 93.25% >45 days late            |  
-| `decision_date`     | Date insurer finalized claim        | Avg. processing: 15.5 days       |  
-| `denial_reason`     | Why claim was reduced/denied        | 39,962 nulls (79.92%)           |  
-| `icd_code`/`cpt_code`| Diagnosis/procedure codes           | 25,060 nulls (50.12%)           |  
-| `is_compliant`      | Whether claim met rules             | 4,000+ approved claims non-compliant |  
+**Critical Columns**:  
+| **Column**          | **Critical Issue**               | **Impact**              |  
+|---------------------|----------------------------------|-------------------------|  
+| `denial_reason`     | 39,962 nulls (79.92%)           | Undermines RCA accuracy |  
+| `is_compliant`      | 4,000+ non-compliant approvals  | SAR 99.66M at risk      |  
+| `claim_status`      | Paid denials (5,090 claims)     | SAR 5.67M leakage       |  
+| `icd_code`          | 25,060 nulls (50.12%)           | Invalidates 50% of data |  
 
 ---
 
 ### **9. Documenting Issues**  
-| **Table** | **Column**        | **Issue**                              | **Magnitude** | **Solvable** | **Resolution**                    |  
-|-----------|-------------------|----------------------------------------|---------------|--------------|-----------------------------------|  
-| claims    | `denial_reason`   | Null in 79.92% of underpaid claims     | High          | Yes          | Mandate field entry at submission |  
-| claims    | `icd_code`        | 50.12% nulls (invalid for medical)     | High          | Yes          | ADA code parity for dental claims |  
-| claims    | `is_compliant`    | Approved claims marked non-compliant   | Critical      | Yes          | Reconcile with adjudication rules |  
-| claims    | `claim_status`    | "Denied" claims with paid amounts      | Critical      | Yes          | Block payments if status=Denied   |  
+| **Table** | **Column**        | **Issue**                              | **Resolution**                    |  
+|-----------|-------------------|----------------------------------------|-----------------------------------|  
+| claims    | `is_compliant`    | Approved non-compliant claims          | Integrate with approval workflows |  
+| claims    | `claim_status`    | "Denied" claims with paid amounts      | Block payment system integration  |  
+| claims    | `denial_reason`   | Null in underpaid claims               | Mandatory field at submission     |  
 
 ---
 
 ### **10. Executive Summary**  
-**For CFO & COO**:  
-1. **SAR 105.33M at Risk**:  
-   - **SAR 5.67M** paid for non-compliant denied claims (immediate refund action required).  
-   - **SAR 99.66M** approved despite non-compliance (governance failure).  
-2. **Operational Delays**: 93.25% claims submitted >45 days late (avg. 366 days).  
-3. **Dental Claims Crisis**: 100% underpaid due to invalid CPT/ICD logic (fix: accept ADA codes).  
+**Critical Risks & Opportunities**:  
+1. **Financial Leakage (SAR 108.74M)**:  
+   - **SAR 5.67M**: Paid for non-compliant denied claims  
+   - **SAR 103.07M**: Underpayment reductions at dispute risk  
+2. **Compliance Breaches**:  
+   - 19,898 non-compliant claims fully approved (SAR 99.66M)  
+3. **Operational Improvements**:  
+   - Submission lags reduced from 500 to 100 days (2022-2025)  
+   - Processing time halved (150 → 50 days)  
 
 ---
 
 ### **11. Insights Deep Dive**  
-#### **Category 1: Financial Leakage**  
-- **Insight**: **SAR 5.67M** disbursed for claims marked `Denied + is_compliant=False`.  
-- **Insight**: 49.53% of approved amounts (**SAR 99.66M**) were non-compliant.  
-- **Recommendation**: Freeze these payments and audit adjudicator IDs P168 and P853.  
+#### **Category 1: Financial Leakage & Underpayments**  
+- **SAR 5.67M** paid for denied claims (5,090 records)  
+- **SAR 103.07M** underpayment reductions from 10,038 claims:  
+  - **Uniform reductions**: ~SAR 10,270/claim regardless of denial reason  
+  - **Top drivers**: Over Limit (SAR 26.6M), Not Covered (SAR 26.0M)  
+- **Compliance Gaps**: 19,898 non-compliant claims approved & paid  
 
-#### **Category 2: Timeliness**  
-- **Insight**: 93.25% claims submitted >45 days late (up to 1,095 days).  
-- **Insight**: Riyadh has highest average lifecycle time: 385 days.  
-- **Recommendation**: EHR integration and penalties for late submissions.  
+#### **Category 2: Timeliness & Efficiency**  
+- **Submission Lag**:  
+  - 93.25% claims >45 days late (avg. 366 days)  
+  - Improved from 500 days (2022) to 100 days (2025)  
+- **Processing Time**:  
+  - Reduced from 150 days (Jan 2023) to 50 days (Jan 2025)  
 
-#### **Category 3: Claim Accuracy**  
-- **Insight**: 5,033 dental claims underpaid due to ADA code rejection.  
-- **Insight**: Most common denials — "Over Limit" (2,564), "Not Covered" (2,561).  
-- **Recommendation**: Accept ADA codes; review benefit design logic.  
+#### **Category 3: Claim Accuracy & Denials**  
+- **Underpayment Root Causes**:  
+  | **Reason**       | **Claims** | **Reduction (SAR)** |  
+  |------------------|------------|---------------------|  
+  | Over Limit       | 2,564      | 26.58M              |  
+  | Not Covered      | 2,561      | 26.03M              |  
+  | Invalid Code     | 2,473      | 25.67M              |  
+  | Incomplete Info  | 2,440      | 24.78M              |  
+- **Dental Claims**: 5,033 underpaid due to ADA code rejection  
 
-#### **Category 4: Geographic Hotspots**  
-- **Insight**: Makkah leads in cholera (A00) denials, pending goiter (E04) claims.  
-- **Insight**: Melanoma (D03) denials highest in Riyadh.  
-- **Recommendation**: Targeted coding training for providers.  
+#### **Category 4: Geographic & Clinical Hotspots**  
+- **City Risk**:  
+  - **C02**: Highest denials (524), all ICDs >100 denials  
+  - **E04**: Extreme D05 denials (117)  
+- **ICD Risk**:  
+  - **B04**: 536 denials (all cities)  
+  - **D05**: 515 denials (E04 hotspot)  
 
 ---
 
 ### **12. Recommendations**  
-1. **Financial Controls**  
-   - Reverse **SAR 5.67M** in non-compliant denied claim payouts.  
-   - Block payments where `claim_status = "Denied"`.  
-2. **Dental Claims Fix**  
-   - Accept ADA codes to stop 100% underpayments.  
-3. **Provider Training**  
-   - Prioritize adjudicator training (P168, P853).  
-4. **Compliance Logic Audit**  
-   - Investigate non-compliant approved claims (~SAR 99.66M).  
-5. **Timeliness SLA**  
-   - Penalize claims >5 days late; enable EHR auto-submission.  
+**Immediate Actions (0-3 Months)**:  
+1. **Recover SAR 5.67M**: Freeze payments for denied claims and initiate refunds  
+2. **Revise Underpayment Logic**:  
+   - Replace flat reductions with reason-specific rules  
+   - e.g., "Incomplete Info" → 50% payment, "Over Limit" → 80% payment  
+3. **Compliance Integration**: Block approvals when `is_compliant=False`  
+
+**System & Process Improvements**:  
+- **Provider Education**:  
+  - Target ICD B04/D05 coding errors (C02/E04 cities)  
+  - Train on ADA requirements for dental claims  
+- **Automated Controls**:  
+  - Payment block if `claim_status="Denied"`  
+  - Daily reconciliation reports for compliance categories  
+
+**Financial Impact**:  
+| **Initiative**               | **Savings/Recovery** |  
+|------------------------------|----------------------|  
+| Fix denied claim payments    | SAR 5.67M immediate |  
+| Reduce "Invalid Code" errors | SAR 25.67M annually |  
+| Optimize "Over Limit" logic  | SAR 5.32M annually  |  
 
 ---
 
 ### **13. Future Work**  
-- **ML Flagging**: Build model to predict non-compliant or high-risk claims.  
-- **Scorecards**: Monthly report cards for provider accuracy and timeliness.  
-- **Policy Mapping**: Align `is_compliant` logic with SCHI standards.  
+- **ML Predictive Analytics**: Flag high-risk claims pre-adjudication  
+- **Provider Performance Scorecards**: Accuracy/timeliness benchmarks  
+- **Benefit Design Review**: Update coverage limits for frequently exceeded services  
 
 ---
 
 ### **14. Technical Details**  
-**Tools Used**:  
-- **Python (Pandas)**: Time calculations, null detection  
+**Key Analyses**:  
+- **Compliance Reconciliation**: 6-category payment/compliance segmentation  
+- **Root Cause Analysis**: Denial reason segmentation of underpayments  
+- **Geospatial Heatmaps**: City/ICD denial hotspots  
 
+---
 
-### **15. Assumptions and Caveats**
-- **Date Integrity**: Claims before *2022-06-05* were excluded as out-of-scope per business rules.
-- **ICD Validity**: Diagnosis codes (`icd_code`) were assumed valid if non-null, although 25,000+ records had missing values.
-- **Compliance Logic**: The `is_compliant` field was presumed accurate, despite observable inconsistencies with claim status and payment outcomes.
-- **Profit Estimate**: A flat 20% profit margin was applied to all claims; actual margins may vary depending on provider contracts and negotiated rates.
+### **15. Assumptions and Caveats**  
+- **Underpayment Risk**: SAR 103.07M represents potential provider disputes  
+- **ICD Completeness**: 50.12% null rates limit clinical insights  
+- **Currency**: USD conversions at 1 USD = 3.75 SAR  
+- **Timeframe**: Claims outside 2022-2025 excluded from analysis  
+
